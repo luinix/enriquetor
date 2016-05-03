@@ -45,7 +45,9 @@ class Enriquetor
 
   def apply_substitutions
     SUBSTITUTIONS.reduce(@message) do |msg, (regex, values)|
-      msg.gsub(regex, values.sample)
+      msg.gsub(regex) do 
+        values.sample
+      end
     end
   end
 end
