@@ -1,0 +1,54 @@
+#!/usr/bin/ruby
+
+class Enriquetor
+  PREFIXES = [
+    "Listen",
+    "Believe me"
+  ]
+
+  SUFFIXES = [
+    "a hundred percent sure",
+    "I'm telling you"
+  ]
+
+  CONJUNCTIONS = [
+    ", ",
+    ", like, "
+  ]
+
+  SUBSTITUTIONS = [
+    [ /sh/, [ 'ch' ] ],
+    [ /\. /, [". ", ". It's crazy. "] ]
+  ]
+
+  def initialize(msg)
+    @message = msg.chomp('.')
+  end
+
+  def process
+    random_prefix + random_conjunction + apply_substitutions + random_conjunction + random_suffix + '.'
+  end
+
+  private
+
+  def random_prefix
+    PREFIXES.sample
+  end
+
+  def random_suffix
+    SUFFIXES.sample
+  end
+
+  def random_conjunction
+    CONJUNCTIONS.sample
+  end
+
+  def apply_substitutions
+    SUBSTITUTIONS.reduce(@message) do |msg, (regex, values)|
+      msg.gsub(regex, values.sample)
+    end
+  end
+end
+
+puts Enriquetor.new(ARGV[0]).process
+
