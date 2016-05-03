@@ -13,7 +13,8 @@ class Enriquetor
 
   CONJUNCTIONS = [
     ", ",
-    ", like, "
+    ", like, ",
+    ", literally, "
   ]
 
   SUBSTITUTIONS = [
