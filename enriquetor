@@ -8,7 +8,8 @@ class Enriquetor
 
   SUFFIXES = [
     "a hundred percent sure",
-    "I'm telling you"
+    "I'm telling you",
+    "I guarantee you"
   ]
 
   CONJUNCTIONS = [
