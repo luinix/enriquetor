@@ -7,7 +7,7 @@ class Enriquetor
   ]
 
   SUFFIXES = [
-    "a hundred percent sure",
+    "a hundred percent chure",
     "I'm telling you",
     "I guarantee you"
   ]
@@ -20,7 +20,8 @@ class Enriquetor
 
   SUBSTITUTIONS = [
     [ /sh/, [ 'ch' ] ],
-    [ /\. /, [". ", ". It's crazy. "] ]
+    [ /s/, [ 'ch' ] ],
+    [ /\. /, [". ", ". It's crazy. ", ". For chure. "] ]
   ]
 
   def initialize(msg)
