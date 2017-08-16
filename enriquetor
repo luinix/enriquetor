@@ -1,66 +1,8 @@
 #!/usr/bin/ruby
 
-class Enriquetor
-  PREFIXES = [
-    "Listen",
-    "Believe me"
-  ]
+require_relative "bullshit_generator"
+require_relative "translator"
 
-  SUFFIXES = [
-    "a hundred percent chure",
-    "I'm telling you",
-    "I guarantee you"
-  ]
-
-  CONJUNCTIONS = [
-    ", ",
-    ", basically, ",
-    ", like, ",
-    ", literally, "
-  ]
-
-  SUBSTITUTIONS = [
-    [ /sh/, [ 'ch' ] ],
-    [ /s/, [ 'ch' ] ],
-    [ /\,\ /, [ ', ', ', kind of, ' ] ],
-    [ /\. /, [". ", ". It's crazy. ", ". For chure. "] ]
-  ]
-
-  def initialize(msg)
-    @message = msg.chomp('.')
-    uncapitalize
-  end
-
-  def process
-    random_prefix + random_conjunction + apply_substitutions + random_conjunction + random_suffix + '.'
-  end
-
-  private
-
-  def random_prefix
-    PREFIXES.sample
-  end
-
-  def random_suffix
-    SUFFIXES.sample
-  end
-
-  def random_conjunction
-    CONJUNCTIONS.sample
-  end
-
-  def uncapitalize 
-    @message = @message[0, 1].downcase + @message[1..-1]
-  end
-
-  def apply_substitutions
-    SUBSTITUTIONS.reduce(@message) do |msg, (regex, values)|
-      msg.gsub(regex) do 
-        values.sample
-      end
-    end
-  end
-end
-
-puts Enriquetor.new(ARGV[0]).process
+message = ARGV[0] || BullShitGenerator.sample
+puts Translator.translate(message)
 
