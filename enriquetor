@@ -3,6 +3,6 @@
 require_relative "bullshit_generator"
 require_relative "translator"
 
-message = ARGV[0] || BullShitGenerator.sample
+message = ARGV[0] || BullShitGenerator.generate
 puts Translator.translate(message)
 

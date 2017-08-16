@@ -29,8 +29,6 @@ class Translator
   end
 
   def translate(message)
-    message = uncapitalize(message)
-
     [ random_prefix,
       random_conjunction,
       apply_substitutions(message),
@@ -50,10 +48,6 @@ class Translator
 
   def random_conjunction
     CONJUNCTIONS.sample
-  end
-
-  def uncapitalize(message)
-    message[0, 1].downcase + message[1..-1]
   end
 
   def apply_substitutions(message)
