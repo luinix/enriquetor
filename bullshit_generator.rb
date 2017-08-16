@@ -42,7 +42,8 @@ class BullShitGenerator
 
   def random_conjunction
     [ ", so we can ",
-      ". That way we will "].sample
+      ". That way we will ",
+      ". Even "].sample
   end
 end
 

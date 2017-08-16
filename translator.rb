@@ -7,7 +7,8 @@ class Translator
   SUFFIXES = [
     "a hundred percent chure",
     "I'm telling you",
-    "I guarantee you"
+    "I guarantee you",
+    "yes or yes"
   ]
 
   CONJUNCTIONS = [
