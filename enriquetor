@@ -26,6 +26,7 @@ class Enriquetor
 
   def initialize(msg)
     @message = msg.chomp('.')
+    uncapitalize
   end
 
   def process
@@ -44,6 +45,10 @@ class Enriquetor
 
   def random_conjunction
     CONJUNCTIONS.sample
+  end
+
+  def uncapitalize 
+    @message = @message[0, 1].downcase + @message[1..-1]
   end
 
   def apply_substitutions
