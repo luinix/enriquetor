@@ -8,14 +8,17 @@ class Translator
     "a hundred percent chure",
     "I'm telling you",
     "I guarantee you",
-    "yes or yes"
+    "yes or yes",
+    "we don't really have a choice do we?",
+    "and well you know the rest"
   ]
 
   CONJUNCTIONS = [
     ", ",
     ", basically, ",
     ", like, ",
-    ", literally, "
+    ", literally, ",
+    ", definitely, "
   ]
 
   SUBSTITUTIONS = [
