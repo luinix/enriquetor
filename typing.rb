@@ -1,9 +1,9 @@
-class HumanTypingFormatter
+class Typing
   AVERAGE_LINE_LENGTH = 40
   CHARACTERS_PER_MINUTE = 400
   SPEED_VARIATION = 10 # ± 10%
 
-  def self.format(message)
+  def self.simulate(message)
     self.new(message).format
   end
 
@@ -69,3 +69,4 @@ class HumanTypingFormatter
     [ max_breaks, number_of_dots ].max
   end
 end
+
