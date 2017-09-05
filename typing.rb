@@ -3,7 +3,7 @@ class Typing
   CHARACTERS_PER_MINUTE = 400
   SPEED_VARIATION = 10 # ± 10%
 
-  def self.simulate(message)
+  def self.add_simulation(message)
     self.new(message).format
   end
 
