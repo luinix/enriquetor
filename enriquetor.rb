@@ -1,6 +1,5 @@
 #!/usr/bin/ruby
 
-require_relative 'typing'
 Dir[__dir__ + "/*/**/*.rb"].each {|file| require file }
 
 class Enriquetor
@@ -8,7 +7,7 @@ class Enriquetor
     message = Bullshit::Generator.produce
     translated_message = VirtualEnrique::Translator.translate(message)
 
-    Typing.add_simulation([username, translated_message].join(' '))
+    Typer.add_typing([username, translated_message].join(' '))
   end
 end
 

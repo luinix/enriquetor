@@ -1,9 +1,9 @@
-class Typing
+class Typer
   AVERAGE_LINE_LENGTH = 40
   CHARACTERS_PER_MINUTE = 400
   SPEED_VARIATION = 10 # ± 10%
 
-  def self.add_simulation(message)
+  def self.add_typing(message)
     self.new(message).format
   end
 
