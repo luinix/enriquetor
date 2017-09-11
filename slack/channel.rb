@@ -15,6 +15,8 @@ module Slack
     end
 
     def process(message)
+      return if message.user == client.self.id
+
       case message.text
       when /<@#{client.self.id}> shut up/ then
         decrease_probability
