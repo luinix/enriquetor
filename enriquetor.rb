@@ -1,6 +1,8 @@
 #!/usr/bin/ruby
 
-Dir[__dir__ + "/*/**/*.rb"].each {|file| require file }
+Dir[__dir__ + "/bullshit/**/*.rb"].each {|file| require file }
+Dir[__dir__ + "/slack/**/*.rb"].each {|file| require file }
+Dir[__dir__ + "/virtual_enrique/**/*.rb"].each {|file| require file }
 
 class Enriquetor
   def self.message(username = nil)
