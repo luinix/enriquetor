@@ -3,6 +3,7 @@ module VirtualEnrique
     class Prefixes
       def self.sample
         [ "listen",
+          "I'm telling you",
           "believe me" ].sample
       end
     end
