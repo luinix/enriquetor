@@ -35,13 +35,13 @@ module Slack
 
     attr_accessor :timeline, :probability, :client, :replier, :channel, :logger
 
-    def increase_probability(increment = 10)
+    def increase_probability(increment = 5)
       @probability += increment
       @probability = MAX_PROBABILITY if probability > MAX_PROBABILITY
       timeline.say_now "for chure, increasing probability to #{probability} out of #{MAX_PROBABILITY}"
     end
 
-    def decrease_probability(increment = 10)
+    def decrease_probability(increment = 5)
       @probability -= increment
       @probability = MIN_PROBABILITY if probability < MIN_PROBABILITY
       timeline.say_now "for chure, lowering probability to #{probability} out of #{MAX_PROBABILITY}"
