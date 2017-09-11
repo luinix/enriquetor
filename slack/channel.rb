@@ -2,7 +2,7 @@ module Slack
   class Channel
     MAX_PROBABILITY = 100
     MIN_PROBABILITY =   0
-    MAX_PENDING_REPLIES = 2
+    MAX_PENDING_REPLIES = 1
 
     def initialize(client, channel, replier = Enriquetor, probability = 10)
       @probability = probability
@@ -20,12 +20,14 @@ module Slack
         decrease_probability
       when /<@#{client.self.id}> you are talking too little/ then
         increase_probability
+      when /software/ then
+        reply(["<@#{message.user}>", "shoftware can chave livesh", "for chure"].shuffle.join(', '))
       when /<@#{client.self.id}>/
         timeline.wait(1.0)
-        reply(message)
+        reply_bullshit(message)
       else
         timeline.wait(1.0)
-        reply(message) if rand(MAX_PROBABILITY) < probability
+        reply_bullshit(message) if rand(MAX_PROBABILITY) < probability
       end
     end
 
@@ -45,23 +47,27 @@ module Slack
       timeline.say_now "for chure, lowering probability to #{probability} out of #{MAX_PROBABILITY}"
     end
 
-    def add_to_queue(data)
-      @queue.unshift(data)
+    def add_to_queue(message)
+      @queue.unshift(message)
       @queue.pop if @queue.length > MAX_PENDING_REPLIES
     end
 
-    def reply(data)
-      return add_to_queue(data) if @talking
+    def reply_bullshit(message)
+      return add_to_queue(message) if @talking
 
       @talking = true
-      replier.message("<@#{data.user}>").each do |message|
-        timeline.type_message(message)
+      replier.message("<@#{message.user}>").each do |reply|
+        timeline.type_message(reply)
       end
 
       timeline.then do
         @talking = false
         reply(@queue.pop) if @queue.length > 0
       end
+    end
+
+    def reply(text)
+      Typer.add_typing(text).each do |reply| timeline.type_message(reply) end
     end
   end
 end
