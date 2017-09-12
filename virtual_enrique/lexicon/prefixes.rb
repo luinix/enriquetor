@@ -4,6 +4,7 @@ module VirtualEnrique
       def self.sample
         [ "listen",
           "I'm telling you",
+          "to be honest",
           "believe me" ].sample
       end
     end
