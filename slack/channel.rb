@@ -11,7 +11,7 @@ module Slack
       @replier = replier
       @channel = channel
       @queue = []
-      @timeline = Timeline.new(client, @channel)
+      @timeline = Timeline.new(client, @channel, channel_name)
     end
 
     def process(message)
@@ -28,8 +28,10 @@ module Slack
         timeline.wait(1.0)
         reply_bullshit(message)
       else
-        timeline.wait(1.0)
-        reply_bullshit(message) if rand(MAX_PROBABILITY) < probability
+        if rand(MAX_PROBABILITY) < probability
+          timeline.wait(1.0)
+          reply_bullshit(message) 
+        end
       end
     end
 
@@ -58,18 +60,38 @@ module Slack
       return add_to_queue(message) if @talking
 
       @talking = true
+      info "Start setting up talk..."
       replier.message("<@#{message.user}>").each do |reply|
         timeline.type_message(reply)
       end
 
       timeline.then do
         @talking = false
+        info "Done typing..."
         reply(@queue.pop) if @queue.length > 0
       end
+
+      info "Setting up finished"
     end
 
     def reply(text)
       Typer.add_typing(text).each do |reply| timeline.type_message(reply) end
+    end
+
+    def info(log)
+      Slack.config.logger.info "[#{channel_name}] " + log
+    end
+
+    def channel_name
+      begin
+      @channel_name ||= Slack::Web::Client.new.groups_info(channel: channel).group.name
+      rescue Slack::Web::Api::Errors::SlackError
+        begin
+          @channel_name = '#' + Slack::Web::Client.new.channels_info(channel: channel).channel.name
+        rescue Slack::Web::Api::Errors::SlackError
+          @channel_name = "DirectMessage"
+        end
+      end
     end
   end
 end
