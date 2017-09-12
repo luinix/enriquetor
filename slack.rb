@@ -17,10 +17,7 @@ logger.level = Logger::DEBUG
 client = Slack::RealTime::Client.new
 
 client.on :message do |data|
-  logger.info data
-
   channels[data.channel] = channels[data.channel] || Slack::Channel.new(client, data.channel)
-
   channels[data.channel].process(data)
 end
 

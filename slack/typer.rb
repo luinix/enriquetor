@@ -22,7 +22,7 @@ class Typer
   def split_and_add_typing_time
     @message.split("\n").map { |line|
       { text: line,
-        typing_millis: (line.length * millis_per_character * random_variation).to_i }
+        typing_seconds: (line.length * millis_per_character * random_variation).to_i / 1000.0 }
     }
   end
 

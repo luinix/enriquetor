@@ -17,7 +17,7 @@ end
 if __FILE__ == $0
   Enriquetor.message.each do |line|
     print "Enrique is typing..."
-    sleep(line[:typing_millis] / 1000.0)
+    sleep(line[:typing_seconds])
     print "\r                    \r"
     puts "@enrique: " + line[:text] + "\n"
   end

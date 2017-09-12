@@ -16,6 +16,7 @@ module Slack
 
     def process(message)
       return if message.user == client.self.id
+      info "RECEIVED MESSAGE \"#{message.text}\""
 
       case message.text
       when /<@#{client.self.id}> shut up/ then
@@ -25,7 +26,6 @@ module Slack
       when /software/ then
         reply(["<@#{message.user}>", "shoftware can chave livesh", "for chure"].shuffle.join(', '))
       when /<@#{client.self.id}>/
-        timeline.wait(1.0)
         reply_bullshit(message)
       else
         if rand(MAX_PROBABILITY) < probability
@@ -52,26 +52,30 @@ module Slack
     end
 
     def add_to_queue(message)
+      info "Adding message to queue because we're still typing the previous one"
       @queue.unshift(message)
-      @queue.pop if @queue.length > MAX_PENDING_REPLIES
+      if @queue.length > MAX_PENDING_REPLIES
+        info "Full queue: removing oldest message from the queue, will not reply to it"
+        @queue.pop
+      end
     end
 
     def reply_bullshit(message)
       return add_to_queue(message) if @talking
 
       @talking = true
-      info "Start setting up talk..."
+      info "Scheduling talk..."
       replier.message("<@#{message.user}>").each do |reply|
         timeline.type_message(reply)
       end
 
       timeline.then do
         @talking = false
-        info "Done typing..."
-        reply(@queue.pop) if @queue.length > 0
+        info "Done!"
+        reply_bullshit(@queue.pop) if @queue.length > 0
       end
 
-      info "Setting up finished"
+      info "Scheduling finished"
     end
 
     def reply(text)
