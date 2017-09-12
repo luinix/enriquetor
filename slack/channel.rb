@@ -4,7 +4,7 @@ module Slack
     MIN_PROBABILITY =   0
     MAX_PENDING_REPLIES = 1
 
-    def initialize(client, channel, replier = Enriquetor, probability = 10)
+    def initialize(client, channel, replier = Enriquetor, probability = 0)
       @probability = probability
       @talking = false
       @client = client
