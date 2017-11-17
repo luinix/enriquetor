@@ -8,36 +8,37 @@ module Slack
       @probability = ENV['DEFAULT_PROBABILITY'].to_i || 0
       @talking = false
       @client = client
+      @api_client = Slack::Web::Client.new
       @replier = replier
       @channel = channel
       @queue = []
       @timeline = Timeline.new(client, @channel, channel_name)
     end
 
-    def process(message)
-      return if message.user == client.self.id
-      info "RECEIVED MESSAGE \"#{message.text}\""
+    def process(received_message)
+      return if received_message.user == client.self.id
+      info "RECEIVED MESSAGE: \"#{received_message.text}\"", received_message.user
 
-      case message.text
+      case received_message.text
       when /<@#{client.self.id}> shut up/ then
         decrease_probability
       when /<@#{client.self.id}> you are talking too little/ then
         increase_probability
-      when /software/ then
-        reply(["<@#{message.user}>", "shoftware can chave livesh", "for chure"].shuffle.join(', '))
+      when /software/i then
+        reply_now(["<@#{received_message.user}>", "shoftware can chave livesh", "for chure"].shuffle.join(', '))
       when /<@#{client.self.id}>/
-        reply_bullshit(message)
+        reply_in_order(received_message)
       else
-        if rand(MAX_PROBABILITY) < probability
+        if rand(MAX_PROBABILITY) < probability && received_message.user
           timeline.wait(1.0)
-          reply_bullshit(message) 
+          reply_in_order(received_message) 
         end
       end
     end
 
     private
 
-    attr_accessor :timeline, :probability, :client, :replier, :channel, :logger
+    attr_accessor :timeline, :probability, :client, :api_client, :replier, :channel, :logger
 
     def increase_probability(increment = 5)
       @probability += increment
@@ -60,30 +61,32 @@ module Slack
       end
     end
 
-    def reply_bullshit(message)
-      return add_to_queue(message) if @talking
+    def reply_in_order(received_message)
+      return add_to_queue(received_message) if @talking
 
       @talking = true
       info "Scheduling talk..."
-      replier.message("<@#{message.user}>").each do |reply|
+      replier.get_reply(user(received_message.user)).each do |reply|
         timeline.type_message(reply)
       end
 
       timeline.then do
         @talking = false
         info "Done!"
-        reply_bullshit(@queue.pop) if @queue.length > 0
+        reply_in_order(@queue.pop) if @queue.length > 0
       end
 
       info "Scheduling finished"
     end
 
-    def reply(text)
+    def reply_now(text)
       Typer.add_typing(text).each do |reply| timeline.type_message(reply) end
     end
 
-    def info(log)
-      Slack.config.logger.info "[#{channel_name}] " + log
+    def info(log, user_id = nil)
+      prefix = "[#{channel_name}]"
+      prefix += "[#{user(user_id).name}]" if user_id
+      Slack.config.logger.info prefix + " " + log
     end
 
     def channel_name
@@ -95,6 +98,16 @@ module Slack
         rescue Slack::Web::Api::Errors::SlackError
           @channel_name = "DirectMessage"
         end
+      end
+    end
+
+    def user(user_id)
+      users_cache[user_id]
+    end
+
+    def users_cache
+      @users_cache ||= Hash.new do |users_cache, user_id|
+        users_cache[user_id] = api_client.users_info(user: user_id).user
       end
     end
   end

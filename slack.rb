@@ -1,5 +1,6 @@
 require_relative 'enriquetor'
 require 'slack-ruby-client'
+require 'pry'
 
 Slack.configure do |config|
   config.token = ENV['SLACK_API_TOKEN']
